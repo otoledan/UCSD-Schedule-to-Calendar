@@ -1,0 +1,23 @@
+{
+  "name" : "UCSD WebReg",
+  "manifest_version": 2,
+  "version": "1.0",
+  "description": "Manipulate the DOM when the page is done loading",
+  "browser_action": {
+    "name": "Manipulate DOM",
+    "icons": ["icon.png"],
+    "default_icon": "icon1.png",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [ {
+    "js": [ "jquery.min.js", "background.js" ],
+    "matches": [ "http://*/*", "https://*/*"]
+  }],
+  "permissions": [
+          "downloads"
+        ],
+  "background": {
+    "scripts": ["popup.js"],
+    "persistent": false
+  }
+}
