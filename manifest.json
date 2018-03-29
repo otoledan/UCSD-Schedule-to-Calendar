@@ -1,8 +1,8 @@
 {
-  "name" : "UCSD WebReg",
+  "name" : "UCSD Schedule to Calendar",
   "manifest_version": 2,
   "version": "0.0.0.1",
-  "description": "Manipulate the DOM when the page is done loading",
+  "description": "Add Add UCSD Schedule to Calendar using a .ics file. This is done through UCSD Webreg.",
   "browser_action": {
     "name": "Manipulate DOM",
     "icons": ["icon.png"],
