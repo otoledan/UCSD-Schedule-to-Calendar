@@ -1,7 +1,7 @@
 {
   "name" : "UCSD WebReg",
   "manifest_version": 2,
-  "version": "1.0",
+  "version": "0.0.0.1",
   "description": "Manipulate the DOM when the page is done loading",
   "browser_action": {
     "name": "Manipulate DOM",
