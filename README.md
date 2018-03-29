@@ -12,3 +12,7 @@ All of this is packaged into an easy to use chrome extension.
 
 ## Style
 Materialize CSS is used for style.
+
+## Screenshots
+![Screenshot 1](https://github.com/otoledan/UCSD-Schedule-to-Calendar/blob/master/Screenshot1.png)
+![Screenshot 2](https://github.com/otoledan/UCSD-Schedule-to-Calendar/blob/master/Screenshot2.png)
