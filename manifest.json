@@ -2,7 +2,7 @@
   "name" : "UCSD Schedule to Calendar",
   "manifest_version": 2,
   "version": "0.0.0.1",
-  "description": "Add Add UCSD Schedule to Calendar using a .ics file. This is done through UCSD Webreg.",
+  "description": "Add your UCSD Schedule from WebReg to your own Calendar using a .ics file.",
   "browser_action": {
     "name": "Manipulate DOM",
     "icons": ["icon.png"],
