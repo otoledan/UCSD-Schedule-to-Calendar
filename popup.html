@@ -2,31 +2,34 @@
 <html>
 	<head>
     	<!--Import Google Icon Font-->
-      	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      	<!--Import materialize.css-->
-      	<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
 
-      	<!--Let browser know website is optimized for mobile-->
-      	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
 
     <body>
      	<!--JavaScript at end of body for optimized loading-->
-      	<script type="text/javascript" src="js/materialize.min.js"></script>
+      <script type="text/javascript" src="js/materialize.min.js"></script>
     </body>
   	
   	<head>
+      <!--Import jquery and set title on hover-->
     	<title>UCSD Webreg Calendar Maker</title>
     	<script src="popup.js"></script>
     	<script src="jquery-3.3.1.js"></script>
   	</head>
   
+    <!--Set body style with background image and linear gradient-->
   	<body style="width: auto; min-width: 500px; margin: 10px; margin-top: -20px; background-image: linear-gradient(to bottom, rgba(255,255,255,0.75), rgba(255,255,255,0.25)), url('UCSD1.png'); background-size: 130%; background-repeat: no-repeat;">
 	    <h3 style="text-align: center;">Add UCSD Schedule to Calendar</h3>
 	    <h4><u>Steps</u></h4>
 	   	<h5>1. Go to current quarter in WebReg 
 	    <br>2. Download .ics of schedule
 	    <br>3. Import into your favorite calendar client</h5>
+      <!--use Materialize buttons for downloading a calendar and linking to google calendar-->
 	   	<a id=makeCalendar class="waves-effect waves-light blue accent-4 btn" style="display: flex; align-items: center;justify-content: center; margin-bottom: 10px;">
 	   	Download a Calendar (.ics) From Your Schedule</a>
 	   	<a id=addToGoogleCalendar class="waves-effect waves-light blue accent-4 btn" style="display: none; align-items: center;justify-content: center; margin-top: 10px;">

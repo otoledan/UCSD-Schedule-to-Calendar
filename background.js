@@ -1,3 +1,6 @@
+/*
+*   gets the dom elements of the schedule and placed them into an array
+*/
 function getJQuery() {
     arr = [];
     for (var i = 0; i < 40; i++) {
@@ -12,6 +15,10 @@ function getJQuery() {
     return arr;
 }
 
+/*
+*   creates an array of course objects from the array which are then used to 
+*   create the schedule
+*/
 function getCourses(arr) {
     var subject_course = [];
     var course = {name: "", type: "", days: "", time: "", loc: ""};
@@ -22,11 +29,15 @@ function getCourses(arr) {
     var time;
     var loc;
 
+    //for loop to go through every row in schedule (Lecture, Lab, Discussion, Final)
     for (var i = 0; i < arr.length; i++) {
+        //for loop to get needed information to crease course object
         for (var j = 0; j < 10; j++) {
+            //sets the name of the class
             if (j == 0 && arr[i][j].outerText.trim() != "") {
                 name = arr[i][j].outerText.trim();
             }
+            //sets the tyle of the class
             else if (j == 3 && arr[i][j].outerText.trim() != "") {
                 type = arr[i][j].outerText.trim();
                 
@@ -39,14 +50,19 @@ function getCourses(arr) {
                 else if (type == "FI")
                     type = "Final";
             }
-        
+            
+            //records the days on which the class occurs
             else if (j == 7 && arr[i][j].outerText.trim() != "") {
                 days = arr[i][j].outerText.trim();
             }
+
+            //records the times at which the class occurs
             else if (j == 8 && arr[i][j].outerText.trim() != "") {
                 time = arr[i][j].outerText.trim();
                 time = time.split("-");
             }
+
+            //recrods the location of the class and if TBA, then location is not saved)
             else if (j == 9 && arr[i][j].outerText.trim() != "") {
                 if (arr[i][j].outerText.trim() == "TBA" || arr[i][j+ 1].outerText.trim() == "TBA") {
                     loc = "";
@@ -63,12 +79,17 @@ function getCourses(arr) {
         course.days = days;
         course.time = time;
         course.loc = loc;
+
+        //adds course object to array
         subject_course.push(course);
     }
 
     return subject_course;
 }
 
+/**
+*   Converts days of the week to an array that is readable by an ics file
+*/
 function convertTime(day) {
     var days = [];
     var len = day.length;
@@ -100,17 +121,25 @@ function convertTime(day) {
     return days;
 }
 
+/*
+*   gets the days of each course
+*/
 function getDays(subject_course) {
     for (var i = 0; i < subject_course.length; i++) {
+        //for all classes except final converts the days to array
         if (subject_course[i].type != "Final") {
             subject_course[i].days = convertTime(subject_course[i].days);
         }
+        //for final stores the date of the final
         else {
         subject_course[i].days = subject_course[i].days.split(" ")[1].trim();
         }
     }
 }
 
+/*
+*   converts start and end times to string that can be read by ics file
+*/
 function timeToString(subject_course) {
     for (var i = 0; i < subject_course.length; i++) {
         subject_course[i].hourStart = parseInt(subject_course[i].time[0].split(":")[0]);
@@ -141,15 +170,25 @@ function timeToString(subject_course) {
     }
 }
 
+/*
+*   Adds specified number of days to javascript date object
+*/
 function addDays(date, days) {
   var result = new Date(date);
   result.setDate(result.getDate() + days);
   return result;
 }
 
+
+/*
+*   sets the start and end dates for the course which include until when they should be repeated.
+*/
 function date(start, end, subject_course) {
+    //for loop to go through every course
     for (var i=0; i < subject_course.length; i++) {
+        //if the subject_course object is a final
         if (subject_course[i].type == "Final") {
+            //extracts the date of the final and sets the start end date
             var date = subject_course[i].days.split("/");
             var date = "" + date[2] + date[0] + date[1] + "";
             subject_course[i].dateStartStr = date;
@@ -157,6 +196,8 @@ function date(start, end, subject_course) {
         }
     
         else {
+            //else converts the subject_course object's date to a javascript date object
+            //in order to properly assign the correct start date
             var year = start.substring(0,4);
             var month = start.substring(4,6);
             var day = start.substring(6,8);
@@ -201,6 +242,9 @@ function date(start, end, subject_course) {
     }
 }
 
+/*
+*   creates a .ics event (aka VEvent) string for a course
+*/
 function createVEvent(course) {
     var s = 
         "BEGIN:VEVENT" + "\n";
@@ -233,6 +277,13 @@ function createVEvent(course) {
     return s;
 }
 
+/*
+*   function to return the start and end times of instruction for 
+*   every Fall, Winter, Spring, Summer Session 1, and Summer
+*   Session 2 quarters based on the quarter that one is looking at
+*
+*   Dates came from UCSD Academic Calendar
+*/
 function getStartEnd() {
     var dates = [
         ["WI18", "20180108", "20180316"],
@@ -278,6 +329,10 @@ function getStartEnd() {
     return ["","",""];
 }
 
+/*
+*   Function which makes a calendar for the correct quarter out of all
+*   the subject_course array's objects
+*/
 function makeCalendar(quarter, subject_course) {
     if (subject_course.length == 0) {
         return undefined;
@@ -320,28 +375,43 @@ function makeCalendar(quarter, subject_course) {
     return s;
 }
 
+//undefine variable
 var ical;
 
+//if on webreg page and not start page 
 if ($(location).attr('href').split("/")[3] == "webreg2" && $(location).attr('href').split("/")[4] != "start") {
 
+    //array to get objects
     var arr = getJQuery();
+    //gets the subject_courses from array
     var subject_course = getCourses(arr);
+    //assigns the correct days array to subject_course
     getDays(subject_course);
+    //converts the times to a .ics readeable string
     timeToString(subject_course);
+    //gets the start end times 
     var startEnd = getStartEnd();
+    //sets start end dates for course
     date(startEnd[1],startEnd[2], subject_course);
+    //returns .ics readeable calendar string
     ical = makeCalendar(startEnd[0], subject_course);
 }
 
+/*
+*   Background listener for messages send from extension
+*/
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
+        //if make calendar button is clicked sends response
         if(request.message === "clicked_browser_action"){// && ical != undefined) {
             sendResponse({calendar: ical});
         }
-        else if(request.message === "add_google_calendar"){// && ical != undefined) {
+        //if add to google calendar button is clicked, redirects page to google calendar import page
+        else if(request.message === "add_google_calendar"){
             location.replace("https://calendar.google.com/calendar/r/settings/export");
         }
-        else if(request.message === "go_to_webreg"){// && ical != undefined) {
+        //if extension icon is clicked, redirects page to webreg if not already there
+        else if(request.message === "go_to_webreg"){
             if ($(location).attr('href').split("/")[2] != "act.ucsd.edu" || $(location).attr('href').split("/")[3] != "webreg2") {
                 location.replace("https://act.ucsd.edu/webreg2/start");
             }
