@@ -18,21 +18,72 @@
   	<head>
       <!--Import jquery and set title on hover-->
     	<title>UCSD Webreg Calendar Maker</title>
+      <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+      <script src="script.js"></script>
     	<script src="popup.js"></script>
     	<script src="jquery-3.3.1.js"></script>
   	</head>
   
     <!--Set body style with background image and linear gradient-->
-  	<body style="width: auto; min-width: 500px; margin: 10px; margin-top: -20px; background-image: linear-gradient(to bottom, rgba(255,255,255,0.75), rgba(255,255,255,0.25)), url('UCSD1.png'); background-size: 130%; background-repeat: no-repeat;">
+  	<body style="width: auto; min-width: 500px; margin: 10px; margin-top: -20px; background-image: linear-gradient(to bottom, rgba(255,255,255,0.75), rgba(255,255,255,0.25)), url('UCSD1.png'); background-size: 150%; background-repeat: no-repeat;">
+      <style>
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 4;
+    bottom: 125%;
+    left: 50%;
+    margin-left: 200px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+</style>
 	    <h3 style="text-align: center;">Add UCSD Schedule to Calendar</h3>
-	    <h4><u>Steps</u></h4>
-	   	<h5>1. Go to current quarter in WebReg 
-	    <br>2. Download .ics of schedule
-	    <br>3. Import into your favorite calendar client</h5>
+	    <h4 style="text-align: center;""><u>Choose One of the Options Below</u></h4>
+      <h5 id="helpMessage" style="text-align: center; color: firebrick;display: none"><i><strong>Are you on the current quarter on WebReg?</strong></i></h4>
+
       <!--use Materialize buttons for downloading a calendar and linking to google calendar-->
 	   	<a id=makeCalendar class="waves-effect waves-light blue accent-4 btn" style="display: flex; align-items: center;justify-content: center; margin-bottom: 10px;">
-	   	Download a Calendar (.ics) From Your Schedule</a>
-	   	<a id=addToGoogleCalendar class="waves-effect waves-light blue accent-4 btn" style="display: none; align-items: center;justify-content: center; margin-top: 10px;">
-	   	Add to Google Calendar</a>
+	   	Download a Calendar (.ics) Of Your Schedule</a>
+
+      <div class="tooltip" style="display:inline">
+         <span id="tooltipSpan" style="display: none;" class="tooltiptext">Copied to Clipboard</span>
+        <a id=openCalendar class="waves-effect waves-light blue accent-4 btn" style="display: flex; align-items: center;justify-content: center; margin-bottom: 10px;">
+          
+        Copy Link to Calendar (.ics) file</a>
+      </div>
+
+	   	<a id=addToGoogleCalendar class="waves-effect waves-light blue accent-4 btn" style="display: flex; align-items: center;justify-content: center;">
+	   	Add to Google Calendar (Paste Link When Redirected)</a>
+
+      <input id=url style="display: none;"></input>
   	</body>
 </html>

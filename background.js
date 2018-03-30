@@ -376,7 +376,7 @@ function makeCalendar(quarter, subject_course) {
 }
 
 //undefine variable
-var ical;
+var ical = undefined;
 
 //if on webreg page and not start page 
 if ($(location).attr('href').split("/")[3] == "webreg2" && $(location).attr('href').split("/")[4] != "start") {
@@ -406,15 +406,51 @@ chrome.runtime.onMessage.addListener(
         if(request.message === "clicked_browser_action"){// && ical != undefined) {
             sendResponse({calendar: ical});
         }
-        //if add to google calendar button is clicked, redirects page to google calendar import page
+        //if add to google calendar button is clicked, redirects page to add schedule to google calendar
         else if(request.message === "add_google_calendar"){
-            location.replace("https://calendar.google.com/calendar/r/settings/export");
+            //location.replace(request.url);
+            var copyText = document.createElement("input");
+            document.body.appendChild(copyText);
+
+            copyText.value = request.url;
+
+
+            copyText.id = "url";
+
+            copyText.select();
+
+            /* Copy the text inside the text field */
+            document.execCommand("copy");
+
+            setTimeout(function(){}, 10);
+            copyText.style.display = "none";
+            console.log(copyText.value);
+
+            location.replace("https://calendar.google.com/calendar/r/settings/addbyurl");
         }
         //if extension icon is clicked, redirects page to webreg if not already there
         else if(request.message === "go_to_webreg"){
             if ($(location).attr('href').split("/")[2] != "act.ucsd.edu" || $(location).attr('href').split("/")[3] != "webreg2") {
                 location.replace("https://act.ucsd.edu/webreg2/start");
             }
+        }
+        else if(request.message === "openCalendar") {
+            var copyText = document.createElement("input");
+            document.body.appendChild(copyText);
+
+            copyText.value = request.url;
+
+
+            copyText.id = "url";
+
+            copyText.select();
+
+            /* Copy the text inside the text field */
+            document.execCommand("copy");
+
+            setTimeout(function(){}, 10);
+            copyText.style.display = "none";
+            console.log(copyText.value);
         }
     }
 );
