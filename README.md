@@ -14,5 +14,10 @@ All of this is packaged into an easy to use chrome extension.
 Materialize CSS is used for style.
 
 ## Screenshots
-![Screenshot 1](https://github.com/otoledan/UCSD-Schedule-to-Calendar/blob/master/Screenshot1.png)
-![Screenshot 2](https://github.com/otoledan/UCSD-Schedule-to-Calendar/blob/master/Screenshot2.png)
+![Screenshot1](https://github.com/otoledan/UCSD-Schedule-to-Calendar/blob/master/Screenshot1.png)
+![Screenshot2](https://github.com/otoledan/UCSD-Schedule-to-Calendar/blob/master/Screenshot2.png)
+![Screenshot3](https://github.com/otoledan/UCSD-Schedule-to-Calendar/blob/master/Screenshot3.png)
+![Screenshot4](https://github.com/otoledan/UCSD-Schedule-to-Calendar/blob/master/Screenshot4.png)
+![Screenshot5](https://github.com/otoledan/UCSD-Schedule-to-Calendar/blob/master/Screenshot5.png)
+![Screenshot6](https://github.com/otoledan/UCSD-Schedule-to-Calendar/blob/master/Screenshot6.png)
+![Screenshot7](https://github.com/otoledan/UCSD-Schedule-to-Calendar/blob/master/Screenshot7.png)
