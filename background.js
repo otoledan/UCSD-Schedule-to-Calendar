@@ -245,7 +245,7 @@ function date(start, end, subject_course) {
 /*
 *   creates a .ics event (aka VEvent) string for a course
 */
-function createVEvent(course) {
+function createVEvent(course, num) {
     var s = 
         "BEGIN:VEVENT" + "\n";
 
@@ -266,6 +266,7 @@ function createVEvent(course) {
     }
 
     s = s +
+        "UID:" + course.dateStartStr + course.tString[0] + "-" + i + "\n" + 
         "DESCRIPTION:" + "\n" +
         "LOCATION:" + course.loc + "\n" +
         "SEQUENCE:0" + "\n" +
@@ -277,6 +278,39 @@ function createVEvent(course) {
     return s;
 }
 
+var dates = [
+        ["WI18", "20180108", "20180316", "20180324"],
+        ["SP18", "20180402", "20180608", "20180615"],
+        ["S118", "20180702", "20180803", "20180804"],
+        ["S218", "20180806", "20180907", "20180908"],
+        ["FA18", "20180927", "20181207", "20181215"],
+        ["WI19", "20190107", "20190315", "20190323"],
+        ["SP19", "20190401", "20190607", "20190614"],
+        ["S119", "20190701", "20190802", "20190803"],
+        ["S219", "20190805", "20190906", "20190907"],
+        ["FA19", "20190926", "20191206", "20191214"],
+        ["WI20", "20200106", "20200313", "20200321"],
+        ["SP20", "20200330", "20200605", "20200612"],
+        ["S120", "20200629", "20200731", "20200801"],
+        ["S220", "20200803", "20200904", "20200905"],
+        ["FA20", "20201001", "20201211", "20201219"],
+        ["WI21", "20210104", "20210312", "20210320"],
+        ["SP21", "20210329", "20210604", "20210611"],
+        ["S121", "20210628", "20210730", "20210731"],
+        ["S221", "20210802", "20210903", "20210904"],
+        ["FA21", "20210923", "20211203", "20211211"],
+        ["WI22", "20220103", "20220311", "20220319"],
+        ["SP22", "20220328", "20220603", "20220610"],
+        ["S122", "20220627", "20220729", "20220730"],
+        ["S222", "20220801", "20220902", "20220903"],
+        ["FA22", "20220922", "20221202", "20221210"],
+        ["WI23", "20230103", "20230317", "20230325"],
+        ["SP23", "20230403", "20230609", "20230616"],
+        ["S123", "20230703", "20230804", "20230805"],
+        ["S223", "20230807", "20230908", "20230909"] 
+    ];
+
+
 /*
 *   function to return the start and end times of instruction for 
 *   every Fall, Winter, Spring, Summer Session 1, and Summer
@@ -284,39 +318,7 @@ function createVEvent(course) {
 *
 *   Dates came from UCSD Academic Calendar
 */
-function getStartEnd() {
-    var dates = [
-        ["WI18", "20180108", "20180316"],
-        ["SP18", "20180402", "20180608"],
-        ["S118", "20180702", "20180803"],
-        ["S218", "20180806", "20180907"],
-        ["FA18", "20180927", "20181207"],
-        ["WI19", "20190107", "20190315"],
-        ["SP19", "20190401", "20190607"],
-        ["S119", "20190701", "20190802"],
-        ["S219", "20190805", "20190906"],
-        ["FA19", "20190926", "20191206"],
-        ["WI20", "20200106", "20200313"],
-        ["SP20", "20200330", "20200605"],
-        ["S120", "20200629", "20200731"],
-        ["S220", "20200803", "20200904"],
-        ["FA20", "20201001", "20201211"],
-        ["WI21", "20210104", "20210312"],
-        ["SP21", "20210329", "20210604"],
-        ["S121", "20210628", "20210730"],
-        ["S221", "20210802", "20210903"],
-        ["FA21", "20210923", "20211203"],
-        ["WI22", "20220103", "20220311"],
-        ["SP22", "20220328", "20220603"],
-        ["S122", "20220627", "20220729"],
-        ["S222", "20220801", "20220902"],
-        ["FA22", "20220922", "20221202"],
-        ["WI23", "20230103", "20230317"],
-        ["SP23", "20230403", "20230609"],
-        ["S123", "20230703", "20230804"],
-        ["S223", "20230807", "20230908"] 
-    ];
-
+function getStartEnd(dates) {
     var url = $(location).attr('href');
 
     var quarter = url.split("=")[1].split("&")[0];
@@ -367,7 +369,7 @@ function makeCalendar(quarter, subject_course) {
         "END:VTIMEZONE" + "\n";
 
     for (var i = 0; i < subject_course.length; i++) {
-        s = s + createVEvent(subject_course[i]);
+        s = s + createVEvent(subject_course[i], i);
     }
 
     s = s + "END:VCALENDAR\n"
@@ -390,7 +392,7 @@ if ($(location).attr('href').split("/")[3] == "webreg2" && $(location).attr('hre
     //converts the times to a .ics readeable string
     timeToString(subject_course);
     //gets the start end times 
-    var startEnd = getStartEnd();
+    var startEnd = getStartEnd(dates);
     //sets start end dates for course
     date(startEnd[1],startEnd[2], subject_course);
     //returns .ics readeable calendar string
@@ -427,13 +429,7 @@ chrome.runtime.onMessage.addListener(
             console.log(copyText.value);
 
             location.replace("https://calendar.google.com/calendar/r/settings/addbyurl");
-        }
-        //if extension icon is clicked, redirects page to webreg if not already there
-        else if(request.message === "go_to_webreg"){
-            if ($(location).attr('href').split("/")[2] != "act.ucsd.edu" || $(location).attr('href').split("/")[3] != "webreg2") {
-                location.replace("https://act.ucsd.edu/webreg2/start");
-            }
-        }
+        }    
         else if(request.message === "openCalendar") {
             var copyText = document.createElement("input");
             document.body.appendChild(copyText);
@@ -454,3 +450,43 @@ chrome.runtime.onMessage.addListener(
         }
     }
 );
+
+// yyyymmdd format
+function datesInBetween(dateFrom, dateTo) {
+    var d1 = [dateFrom.substring(0,4), dateFrom.substring(4,6), dateFrom.substring(6, 8)];
+    var d2 = [dateTo.substring(0,4), dateTo.substring(4,6), dateTo.substring(6, 8)];
+
+    var from = new Date(d1[0], parseInt(d1[1])-1, d1[2]);  // -1 because months are from 0 to 11
+    var to   = new Date(d2[0], parseInt(d2[2])-1, d2[2]);
+    var check = new Date(); 
+    console.log(check > from && check <= to);
+
+    return (check > from && check <= to);
+}
+
+chrome.storage.sync.get(['switchOn'], function(result) {
+    if ((result.switchOn || result.switchOn === undefined) && $(location).attr('href') == "https://act.ucsd.edu/webreg2/start") {
+
+        var isBetween = false;
+
+        var len = dates.length;
+        var i = 0;
+
+        while (isBetween == false && i < len-1) {
+            isBetween = datesInBetween(dates[i][3], dates[i+1][3]);
+            i++
+        }
+
+
+        var arr = Array.from($("#startpage-select-term").children());
+
+        for (var j = 0; j < arr.length; j++) {
+            console.log(arr[j].value.split(":")[3] + " " + dates[i][0])
+            if (arr[j].value.split(":")[3] === dates[i][0]) {
+                $("#startpage-select-term")[0].value = arr[j].value;
+            }
+        }
+
+        $("#startpage-button-go").click();
+    };
+});

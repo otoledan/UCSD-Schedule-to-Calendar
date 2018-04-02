@@ -21,7 +21,7 @@
       <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
       <script src="script.js"></script>
     	<script src="popup.js"></script>
-    	<script src="jquery-3.3.1.js"></script>
+    	<script src="jquery-331.js"></script>
   	</head>
   
     <!--Set body style with background image and linear gradient-->
@@ -84,6 +84,14 @@
 	   	<a id=addToGoogleCalendar class="waves-effect waves-light blue accent-4 btn" style="display: flex; align-items: center;justify-content: center;">
 	   	Add to Google Calendar (Paste Link When Redirected)</a>
 
-      <input id=url style="display: none;"></input>
+      <!-- Switch -->
+  <div class="switch">
+    <h6> <label>
+      <input id="currentQuarterButton" type="checkbox">
+      <span class="lever"></span>
+    </label>
+
+    Always goto current quarter on icon click
+    <h6>
   	</body>
 </html>
