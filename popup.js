@@ -30,18 +30,56 @@ document.addEventListener('DOMContentLoaded', function() {
                 	//creates text blob
 
                     calendar = response.calendar;
+                    
                     chrome.storage.sync.set({"calendar": response.calendar}, function() {});
+                        var blob = new Blob([calendar], {type: "text/plain"});
+                        //creates url out of text blob
+                        var url = URL.createObjectURL(blob);
 
-                	var blob = new Blob([response.calendar], {type: "text/calendar"});
-                	//creates url out of text blob
-                	var url = URL.createObjectURL(blob);
+                        //downloads calendar file
+                        if (tabs[0].incognito == false) {
+                            chrome.downloads.download({
+                                url: url,
+                                filename: "Classes.ics"
+                            });
+                        }
+                        else {
+                            var ref = firebase.storage().ref();
 
-                    //downloads calendar file
-	                chrome.downloads.download({
-	                    url: url,
-	                    filename: "Classes.ics"
-                	});
-            	}
+                            console.log(ref);
+
+                            var array = new Uint32Array(4);
+                            window.crypto.getRandomValues(array);
+
+                            var str = "";
+                            for (var i = 0; i < array.length; i++) {
+                                str = str + "" + array[i];
+                            }
+
+                            var name = 'Classes'+ str +'.ics'
+
+                            ref = ref.child(name);
+
+                            var file = new File([blob], name, {type: 'text/calendar', lastModified: Date.now()});
+
+                            ref.put(file).then(function(snapshot) {
+
+                                ref.getDownloadURL().then(function(url) {
+
+                                    overallURL = url;
+                                    chrome.storage.sync.set({"overallURL": url}, function() {});
+
+                                    var downloadURL = url;
+
+                                    chrome.downloads.download({
+                                        url: downloadURL,
+                                        filename: "Classes.ics"
+                                    });
+
+                                })
+                            });
+                        }
+                    }
             });
         });   
     }, false);
@@ -73,16 +111,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 //if response is defined, aka the calendar string
                 if (response.calendar == undefined) {
                     document.getElementById("helpMessage").style.display = "block";
-                } 
+                }
+                else { 
 
                 chrome.storage.sync.get(['overallURL', 'calendar'], function(result) {   
                     if (result.overallURL !== undefined && result.calendar !== undefined) {
-                        if (result.calendar == response.calendar) {
+                        if (result.calendar === response.calendar) {
+                            console.log("called")
                             overallURL = result.overallURL;
                         }
                     }
 
-                    if (response.calendar != undefined) {
+                    if (response.calendar !== undefined) {
                         document.getElementById("helpMessage").style.display = "hide";
                         if (overallURL == undefined) {
                             //creates text blob
@@ -97,15 +137,19 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Points to the root reference
                             var ref = firebase.storage().ref();
 
-                            // Create a reference to the file to delete
-                            var delteRef = ref.child(result.overallURL.split("/")[7].split("?")[0]);
+                            console.log(ref);
 
-                            // Delete the file
-                            delteRef.delete().then(function() {
-                              // File deleted successfully
-                            }).catch(function(error) {
-                              // Uh-oh, an error occurred!
-                            });
+                            // Create a reference to the file to delete
+                            if (result.overallURL !== undefined) {
+                                var delteRef = ref.child(result.overallURL.split("/")[7].split("?")[0]);
+
+                                // Delete the file
+                                delteRef.delete().then(function() {
+                                  // File deleted successfully
+                                }).catch(function(error) {
+                                  // Uh-oh, an error occurred!
+                                });
+                            }
 
                             var array = new Uint32Array(4);
                             window.crypto.getRandomValues(array);
@@ -152,6 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                 });
+            }
             });
         });   
     }, false);
@@ -170,29 +215,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.calendar == undefined) {
                     document.getElementById("helpMessage").style.display = "block";
                 }
+                else { 
 
-                chrome.storage.sync.get(['overallURL', 'calendar'], function(result) {
-                        
+                chrome.storage.sync.get(['overallURL', 'calendar'], function(result) {   
                     if (result.overallURL !== undefined && result.calendar !== undefined) {
-                        if (result.calendar == response.calendar) {
+                        if (result.calendar === response.calendar) {
+                            console.log("called")
                             overallURL = result.overallURL;
                         }
+                    }
 
-                        if (response.calendar != undefined) {
-                            if (overallURL == undefined) {
-                                document.getElementById("helpMessage").style.display = "hide";
-                                //creates text blob
-                                var blob = new Blob([response.calendar], {type: "text/calendar"});
-                                //creates url out of text blob
-                                var url = URL.createObjectURL(blob);
+                    if (response.calendar !== undefined) {
+                        document.getElementById("helpMessage").style.display = "hide";
+                        if (overallURL == undefined) {
+                            //creates text blob
+                            var blob = new Blob([response.calendar], {type: "text/calendar"});
+                            //creates url out of text blob
+                            var url = URL.createObjectURL(blob);
 
-                                calendar = response.calendar;
-                                chrome.storage.sync.set({"calendar": response.calendar}, function() {});
+                            calendar = response.calendar;
 
-                                // Points to the root reference
-                                var ref = firebase.storage().ref();
+                            chrome.storage.sync.set({"calendar": response.calendar}, function() {});
 
-                                // Create a reference to the file to delete
+                            // Points to the root reference
+                            var ref = firebase.storage().ref();
+
+                            console.log(ref);
+
+                            // Create a reference to the file to delete
+                            if (result.overallURL !== undefined) {
                                 var delteRef = ref.child(result.overallURL.split("/")[7].split("?")[0]);
 
                                 // Delete the file
@@ -201,47 +252,54 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }).catch(function(error) {
                                   // Uh-oh, an error occurred!
                                 });
-
-                                var array = new Uint32Array(4);
-                                window.crypto.getRandomValues(array);
-
-                                var str = "";
-                                for (var i = 0; i < array.length; i++) {
-                                    str = str + "" + array[i];
-                                }
-
-                                var name = 'Classes' + str + '.ics';
-
-                                ref = ref.child(name);
-
-                                var file = new File([blob], name, {type: 'text/calendar', lastModified: Date.now()});
-
-                                ref.put(file).then(function(snapshot) {
-
-                                    ref.getDownloadURL().then(function(url) {
-
-                                        overallURL = url;
-                                        chrome.storage.sync.set({"overallURL": url}, function() {});
-
-                                        chrome.tabs.sendMessage(activeTab.id, {"message": "openCalendar","url" : url}, function(response) {});
-
-                                        var tooltip = document.getElementById("tooltipSpan");
-
-                                        tooltip.style.display = "inline";
-                                    })
-                                });
                             }
-                            else {
-                                chrome.tabs.sendMessage(activeTab.id, {"message": "openCalendar","url" : overallURL}, function(response) {});
 
-                                 var tooltip = document.getElementById("tooltipSpan");
+                            var array = new Uint32Array(4);
+                            window.crypto.getRandomValues(array);
 
-                                tooltip.style.display = "inline";
+                            var str = "";
+                            for (var i = 0; i < array.length; i++) {
+                                str = str + "" + array[i];
                             }
+
+                            var name = 'Classes'+ str +'.ics'
+
+                            ref = ref.child(name);
+
+                            var file = new File([blob], name, {type: 'text/calendar', lastModified: Date.now()});
+
+                            ref.put(file).then(function(snapshot) {
+
+                                ref.getDownloadURL().then(function(url) {
+
+                                    overallURL = url;
+                                    chrome.storage.sync.set({"overallURL": url}, function() {});
+
+                                    var downloadURL = url;
+
+                                    //var downloadURL = "https://www.google.com/calendar/render?cid=http://" + url.substring(8,url.length);
+
+                                    console.log(downloadURL);
+
+                                    chrome.tabs.sendMessage(activeTab.id, {"message": "openCalendar","url" : url}, function(response) {});
+
+                                    var tooltip = document.getElementById("tooltipSpan");
+
+                                    tooltip.style.display = "inline";
+                                })
+                            });
                         }
-                    }
+                        else {
+                            chrome.tabs.sendMessage(activeTab.id, {"message": "openCalendar","url" : overallURL}, function(response) {});
+
+                            var tooltip = document.getElementById("tooltipSpan");
+
+                            tooltip.style.display = "inline";
+                        }
+                        }
+                    });
+                }
                 });
-            });
            });   
     }, false);
 }, false);

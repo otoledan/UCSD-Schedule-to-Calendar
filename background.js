@@ -33,42 +33,44 @@ function getCourses(arr) {
     for (var i = 0; i < arr.length; i++) {
         //for loop to get needed information to crease course object
         for (var j = 0; j < 10; j++) {
-            //sets the name of the class
-            if (j == 0 && arr[i][j].outerText.trim() != "") {
-                name = arr[i][j].outerText.trim();
-            }
-            //sets the tyle of the class
-            else if (j == 3 && arr[i][j].outerText.trim() != "") {
-                type = arr[i][j].outerText.trim();
-                
-                if (type == "LE")
-                    type = "Lecture";
-                else if (type == "LA")
-                    type = "Lab";
-                else if (type == "DI")
-                    type = "Discussion";
-                else if (type == "FI")
-                    type = "Final";
-            }
-            
-            //records the days on which the class occurs
-            else if (j == 7 && arr[i][j].outerText.trim() != "") {
-                days = arr[i][j].outerText.trim();
-            }
-
-            //records the times at which the class occurs
-            else if (j == 8 && arr[i][j].outerText.trim() != "") {
-                time = arr[i][j].outerText.trim();
-                time = time.split("-");
-            }
-
-            //recrods the location of the class and if TBA, then location is not saved)
-            else if (j == 9 && arr[i][j].outerText.trim() != "") {
-                if (arr[i][j].outerText.trim() == "TBA" || arr[i][j+ 1].outerText.trim() == "TBA") {
-                    loc = "";
+            if (arr[i][7].outerText.trim() != "TBA") {
+                //sets the name of the class
+                if (j == 0 && arr[i][j].outerText.trim() != "") {
+                    name = arr[i][j].outerText.trim();
                 }
-                else {
-                    loc = arr[i][j].outerText.trim() + " " + arr[i][j+ 1].outerText.trim();
+                //sets the tyle of the class
+                else if (j == 3 && arr[i][j].outerText.trim() != "") {
+                    type = arr[i][j].outerText.trim();
+                    
+                    if (type == "LE")
+                        type = "Lecture";
+                    else if (type == "LA")
+                        type = "Lab";
+                    else if (type == "DI")
+                        type = "Discussion";
+                    else if (type == "FI")
+                        type = "Final";
+                }
+                
+                //records the days on which the class occurs
+                else if (j == 7 && arr[i][j].outerText.trim() != "") {
+                    days = arr[i][j].outerText.trim();
+                }
+
+                //records the times at which the class occurs
+                else if (j == 8 && arr[i][j].outerText.trim() != "") {
+                    time = arr[i][j].outerText.trim();
+                    time = time.split("-");
+                }
+
+                //recrods the location of the class and if TBA, then location is not saved)
+                else if (j == 9 && arr[i][j].outerText.trim() != "") {
+                    if (arr[i][j].outerText.trim() == "TBA" || arr[i][j+ 1].outerText.trim() == "TBA") {
+                        loc = "";
+                    }
+                    else {
+                        loc = arr[i][j].outerText.trim() + " " + arr[i][j+ 1].outerText.trim();
+                    }
                 }
             }
         }
