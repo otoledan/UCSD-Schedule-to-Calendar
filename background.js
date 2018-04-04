@@ -30,7 +30,7 @@ function getCourses(arr) {
     var loc;
 
     //for loop to go through every row in schedule (Lecture, Lab, Discussion, Final)
-    for (var i = 0; i < arr.length; i++) {
+    for (var i = 0; i < 5; i++) {
         //for loop to get needed information to crease course object
         for (var j = 0; j < 10; j++) {
             if (arr[i][7].outerText.trim() != "TBA") {

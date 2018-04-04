@@ -4,6 +4,8 @@
   // Get a reference to the storage service, which is used to create references in your storage bucket
 var storage = firebase.storage();
 
+console.log(firebase);
+
 var overallURL = undefined;
 var calendar = undefined;
 
@@ -32,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     calendar = response.calendar;
                     
                     chrome.storage.sync.set({"calendar": response.calendar}, function() {});
-                        var blob = new Blob([calendar], {type: "text/plain"});
+                        var blob = new Blob([calendar], {type: "text/calendar"});
                         //creates url out of text blob
                         var url = URL.createObjectURL(blob);
 
@@ -46,8 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         else {
                             var ref = firebase.storage().ref();
 
-                            console.log(ref);
-
                             var array = new Uint32Array(4);
                             window.crypto.getRandomValues(array);
 
@@ -58,7 +58,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             var name = 'Classes'+ str +'.ics'
 
-                            ref = ref.child(name);
+                            console.log(firebase.auth().currentUser.uid + "TEST");
+
+                            ref = ref.child(firebase.auth().currentUser.uid);
+
+                            ref.child(name);
 
                             var file = new File([blob], name, {type: 'text/calendar', lastModified: Date.now()});
 
@@ -141,13 +145,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             // Create a reference to the file to delete
                             if (result.overallURL !== undefined) {
-                                var delteRef = ref.child(result.overallURL.split("/")[7].split("?")[0]);
+                                var delteRef = ref.child(firebase.auth().currentUser.uid);
+                                console.
+                                delteRef = delteRef.child("Classes" + result.overallURL.split("/")[7].split("Classes")[1].split("?")[0]);
 
                                 // Delete the file
                                 delteRef.delete().then(function() {
                                   // File deleted successfully
                                 }).catch(function(error) {
-                                  // Uh-oh, an error occurred!
+                                    console.log(error);
                                 });
                             }
 
@@ -160,6 +166,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
 
                             var name = 'Classes'+ str +'.ics'
+
+                            console.log(firebase.auth().currentUser.uid + "TEST");
+
+                            ref = ref.child(firebase.auth().currentUser.uid);
 
                             ref = ref.child(name);
 
@@ -220,7 +230,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 chrome.storage.sync.get(['overallURL', 'calendar'], function(result) {   
                     if (result.overallURL !== undefined && result.calendar !== undefined) {
                         if (result.calendar === response.calendar) {
-                            console.log("called")
                             overallURL = result.overallURL;
                         }
                     }
@@ -244,7 +253,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             // Create a reference to the file to delete
                             if (result.overallURL !== undefined) {
-                                var delteRef = ref.child(result.overallURL.split("/")[7].split("?")[0]);
+                                var delteRef = ref.child(firebase.auth().currentUser.uid);
+                                delteRef = delteRef.child("Classes" + result.overallURL.split("/")[7].split("Classes")[1].split("?")[0]);
 
                                 // Delete the file
                                 delteRef.delete().then(function() {
@@ -263,6 +273,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
 
                             var name = 'Classes'+ str +'.ics'
+
+                            console.log(firebase.auth().currentUser.uid + "TEST");
+
+                            ref = ref.child(firebase.auth().currentUser.uid);
 
                             ref = ref.child(name);
 
