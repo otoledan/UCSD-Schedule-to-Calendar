@@ -15,6 +15,7 @@ function getJQuery() {
     return arr;
 }
 
+
 /*
 *   creates an array of course objects from the array which are then used to 
 *   create the schedule
@@ -30,7 +31,7 @@ function getCourses(arr) {
     var loc;
 
     //for loop to go through every row in schedule (Lecture, Lab, Discussion, Final)
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < arr.length; i++) {
         //for loop to get needed information to crease course object
         for (var j = 0; j < 10; j++) {
             if (arr[i][7].outerText.trim() != "TBA") {
@@ -389,6 +390,7 @@ if ($(location).attr('href').split("/")[3] == "webreg2" && $(location).attr('hre
     var arr = getJQuery();
     //gets the subject_courses from array
     var subject_course = getCourses(arr);
+    console.log(subject_course);
     //assigns the correct days array to subject_course
     getDays(subject_course);
     //converts the times to a .ics readeable string
